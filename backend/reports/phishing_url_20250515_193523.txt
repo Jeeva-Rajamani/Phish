@@ -1,0 +1,4 @@
+Type: phishing_url
+Time: 20250515_193523
+Content:
+https://facebookcase1477777.web.app/appeal.html

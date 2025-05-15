@@ -1,0 +1,4 @@
+Type: phishing_url
+Time: 20250514_201905
+Content:
+http://steal-info.net/account

@@ -1,0 +1,4 @@
+Type: phishing_email
+Time: 20250514_200725
+Content:
+Click here to claim your prize
