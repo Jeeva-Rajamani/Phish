@@ -2,50 +2,60 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 import os
+from email_reporter import CybercrimeReporter
 
 def report_to_cybercrime(content, content_type):
     """
-    Save phishing reports to CSV with proper file path handling
-    
-    Args:
-        content (str): The URL or email content to report
-        content_type (str): Either 'phishing_url' or 'phishing_email'
-    Returns:
-        bool: True if report was successful, False otherwise
+    Comprehensive reporting system that:
+    - Saves to local CSV
+    - Sends email alert
+    - Returns detailed status
     """
+    report_status = {
+        'file_saved': False,
+        'email_sent': False,
+        'error': None
+    }
+
     try:
-        # Get the absolute path to the backend directory
+        # File system reporting
         backend_dir = Path(__file__).parent
         reports_dir = backend_dir / 'reports'
-        reports_dir.mkdir(exist_ok=True)
+        reports_dir.mkdir(exist_ok=True, mode=0o755)
         
         report_file = reports_dir / 'reported_phishing.csv'
         
-        # Prepare new report data
-        new_report = {
-            'timestamp': [datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
-            'type': [content_type],
-            'content': [content],
-            'status': ['reported']
+        new_entry = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'type': content_type,
+            'content': content,
+            'status': 'reported'
         }
-        
-        df_new = pd.DataFrame(new_report)
-        
-        # Try to append to existing file
-        if report_file.exists():
-            try:
-                df_existing = pd.read_csv(report_file)
-                df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-                df_combined.to_csv(report_file, index=False)
-            except Exception as e:
-                print(f"Warning: Could not read existing report file. Creating new one. Error: {str(e)}")
-                df_new.to_csv(report_file, index=False)
-        else:
-            df_new.to_csv(report_file, index=False)
+
+        # Save to CSV
+        try:
+            if report_file.exists():
+                df = pd.read_csv(report_file)
+                df = pd.concat([df, pd.DataFrame([new_entry])], ignore_index=True)
+            else:
+                df = pd.DataFrame([new_entry])
             
-        print(f"✅ Report saved to: {report_file}")
-        return True
-        
+            df.to_csv(report_file, index=False)
+            report_status['file_saved'] = True
+            print(f"✅ Report saved to {report_file}")
+        except Exception as e:
+            report_status['error'] = f"File save error: {str(e)}"
+            print(f"❌ Could not save report: {str(e)}")
+
+        # Email reporting
+        try:
+            reporter = CybercrimeReporter()
+            report_status['email_sent'] = reporter.send_report(content, content_type)
+        except Exception as e:
+            report_status['error'] = f"Email error: {str(e)}" if not report_status['error'] else report_status['error']
+
+        return report_status
+
     except Exception as e:
-        print(f"❌ Error saving report: {str(e)}")
-        return False
+        report_status['error'] = str(e)
+        return report_status
