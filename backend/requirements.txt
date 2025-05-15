@@ -4,4 +4,4 @@ scikit-learn==0.24.2
 pandas==1.2.4
 joblib==1.0.1
 numpy==1.20.3
-python -m pip install --upgrade python-dotenv
+python-dotenv==1.0.0 (or) python -m pip install --upgrade python-dotenv
