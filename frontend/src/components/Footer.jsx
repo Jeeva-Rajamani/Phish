@@ -33,7 +33,8 @@ const Footer = () => {
             </Typography>
             <Typography variant="body2">
               <Link href="mailto:phishdetect@example.com" color="inherit">
-                PHISHDETECT@2025
+                PHISHDETECT@2025,<br></br>
+                +91 9876543210
               </Link>
             </Typography>
           </Grid>

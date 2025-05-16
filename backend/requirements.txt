@@ -5,3 +5,5 @@ pandas==1.2.4
 joblib==1.0.1
 numpy==1.20.3
 python-dotenv==1.0.0 (or) python -m pip install --upgrade python-dotenv
+python -m pip install transformers
+python -m pip install torch
