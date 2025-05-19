@@ -45,7 +45,13 @@ class CybercrimeReporter:
             Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             
             Content:
+            Subject: Reporting Phishing Email/URL for Investigation
+
+            Dear Cybercrime Cell,
+
+            I would like to report a phishing incident for your attention.
             {content}
+            
             
             ===== END OF REPORT =====
             """
